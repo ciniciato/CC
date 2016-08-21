@@ -128,7 +128,13 @@
 		}
 		
 		control.step = function(){
-			window.requestAnimationFrame(control.step);
+			if (control!=null) 
+				window.requestAnimationFrame = ( function() 
+						return window.webkitRequestAnimationFrame ||
+						window.mozRequestAnimationFrame ||
+						window.oRequestAnimationFrame ||
+						window.msRequestAnimationFrame
+				} )(step);
 			if (canvas.video.readyState === canvas.video.HAVE_ENOUGH_DATA) {
 				canvas.ctx.drawImage(canvas.video, 0, 0, canvas.w, canvas.h);
 				var imageData = canvas.ctx.getImageData(0, 0, canvas.w, canvas.h),
@@ -153,7 +159,21 @@
 					canvas.changeState(2);
 					control.timer =  setTimeout(
 							function() {
-								window.requestAnimationFrame(control.step);
+							
+							window.requestAnimationFrame = ( function() {
+
+										return window.webkitRequestAnimationFrame ||
+										window.mozRequestAnimationFrame ||
+										window.oRequestAnimationFrame ||
+										window.msRequestAnimationFrame ||
+										function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
+
+											control.timer = window.setTimeout( callback, 1000 / 60 );
+
+										};
+
+								} )(step);
+								//window.requestAnimationFrame(control.step);
 							}, 
 						500);
 				}
