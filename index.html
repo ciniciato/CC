@@ -124,17 +124,12 @@
 		}; 	
 		
 		var control = {
+			requestAnimationFrame: null,
 			timer: null
 		}
 		
 		control.step = function(){
-			if (control!=null) 
-				window.requestAnimationFrame = ( function() 
-						return window.webkitRequestAnimationFrame ||
-						window.mozRequestAnimationFrame ||
-						window.oRequestAnimationFrame ||
-						window.msRequestAnimationFrame
-				} )(step);
+			window.requestAnimationFrame(control.step);
 			if (canvas.video.readyState === canvas.video.HAVE_ENOUGH_DATA) {
 				canvas.ctx.drawImage(canvas.video, 0, 0, canvas.w, canvas.h);
 				var imageData = canvas.ctx.getImageData(0, 0, canvas.w, canvas.h),
@@ -146,6 +141,11 @@
 		}
 		
 		control.init = function(){
+			window.requestAnimationFrame =	window.webkitRequestAnimationFrame ||
+											window.mozRequestAnimationFrame ||
+											window.oRequestAnimationFrame ||
+											window.msRequestAnimationFrame ||
+											window.requestAnimationFrame;
 			
 			if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
 				navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
@@ -158,22 +158,8 @@
 				function(){
 					canvas.changeState(2);
 					control.timer =  setTimeout(
-							function() {
-							
-							window.requestAnimationFrame = ( function() {
-
-										return window.webkitRequestAnimationFrame ||
-										window.mozRequestAnimationFrame ||
-										window.oRequestAnimationFrame ||
-										window.msRequestAnimationFrame ||
-										function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
-
-											control.timer = window.setTimeout( callback, 1000 / 60 );
-
-										};
-
-								} )(step);
-								//window.requestAnimationFrame(control.step);
+							function() {							
+								window.requestAnimationFrame(control.step);
 							}, 
 						500);
 				}
