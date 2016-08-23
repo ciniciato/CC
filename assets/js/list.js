@@ -12,12 +12,11 @@ List.prototype.get = function(id){
 
 List.prototype.add = function(value){
 	this.items[this.size++] = {id: this.id++, val: value};
-	this.current   = this.items[this.size-1].val;
-	this.currentID = this.items[this.size-1].id;
 }
 
 List.prototype.next = function(){
-	var ind = this.items.findIndex(o => o.id == this.currentID);
+	var id = (this.currentID==null) ? 0 : this.currentID,
+		ind = this.items.findIndex(o => o.id == this.currentID);
 	if (ind+1 == this.size)
 	{
 		this.current   = this.items[0].val;

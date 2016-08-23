@@ -132,6 +132,4 @@ view.init = function(){
 
 	navigator.mediaDevices.getUserMedia({video: {deviceId: undefined}}).
 			then(this.gotStream).then(this.getDevices).catch(this.handleError);
-	this.devices.current = this.devices.items[0].val;
-	this.devices.currentID = this.devices.items[0].id;
 }
