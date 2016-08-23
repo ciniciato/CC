@@ -17,7 +17,7 @@ List.prototype.add = function(value){
 }
 
 List.prototype.next = function(){
-	var ind = this.items.findIndex(o => o.id === this.currentID);
+	var ind = this.items.findIndex(o => o.id == this.currentID);
 	if (ind+1 == this.size)
 	{
 		this.current   = this.items[0].val;
