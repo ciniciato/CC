@@ -32,7 +32,7 @@
 						<i class="fa fa-image" aria-hidden="true"></i>
 						<input class="loadFile" id="openFile" type="file" id="files" name="files[]" />
 					</li>
-					<li><i class="fa fa-camera" aria-hidden="true" onclick="control.takePhoto();"></i></li>
+					<li><i id="btn_camera" class="fa fa-camera" aria-hidden="true" onclick="control.takePhoto();"></i></li>
 					<li><i class="fa fa-adjust" aria-hidden="true"></i></li>
 					<li><i class="fa fa-crop" aria-hidden="true"></i></li>
 					<li><i class="fa fa-gear" aria-hidden="true"></i></li>
@@ -40,12 +40,16 @@
 			<div>
 		</div>
 			
+        <script src="assets/lib/adapter.js"></script>
+		
+        <script src="assets/js/list.js"></script>
+		
+        <script src="assets/js/utils.js"></script>
         <script src="assets/js/compatibility.js"></script>
         <script src="assets/js/imageData.js"></script>
-        <script src="assets/js/utils.js"></script>
         <script src="assets/js/pointer.js"></script>
         <script src="assets/js/filters.js"></script>
-        <script src="assets/js/canvas.js"></script>
+        <script src="assets/js/view.js"></script>
         <script src="assets/js/control.js"></script>
         <script>  				
 		window.onresize = function(event){

@@ -5,7 +5,6 @@ ImageData.prototype.duplicate = function(){
 	return newImg;
 }
 
-
 ImageData.prototype.getGrayChannel = function(){
 	var newImg = new Uint8ClampedArray(this.width*this.height), i = iN = 0, len = this.data.length;
 	for (; i < len; i+=4, iN++)

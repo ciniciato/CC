@@ -1,3 +1,21 @@
+var 
+	hdConstraints = {
+		video: {
+			mandatory: {
+				minWidth: 1280,
+				minHeight: 720
+			}
+		}
+	},
+	vgaConstraints = {
+		video: {
+			mandatory: {
+				maxWidth: 640,
+				maxHeight: 360
+			}
+		}
+	};
+
 var canvas = {
 	realTime: false,
 	img: null,
