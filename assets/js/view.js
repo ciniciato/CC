@@ -14,6 +14,7 @@ const
 	
 var view = {
 	state: 0,
+	timer: null,
 	container: null,
 	canvas: null,
 	video: null,
@@ -23,29 +24,6 @@ var view = {
 	position: {left: 0, top: 0}
 }
 
-
-view.getDevices = function(deviceInfos){
-	view.devices.empty();
-	var lastDevice = null;
-	for (var i = 0; i !== deviceInfos.length; ++i) 
-	{
-		var deviceInfo = deviceInfos[i];
-		if (deviceInfo.kind === 'videoinput')
-		{
-			view.devices.add(deviceInfo.deviceId, deviceInfo.label);
-			lastDevice = deviceInfo.label;		
-		}
-	}
-	if (view.devices.current == null)
-		view.devices.current = view.devices.items.last().id;
-	else
-		view.devices.next();
-	var constraints = {
-		video: {deviceId: {exact: view.devices.getCurrent()} }
-	};
-	navigator.mediaDevices.getUserMedia(constraints).then(view.getStream).catch(view.handleError);
-}
-
 view.changeState = function(value){
 	this.state = value;
 	this.video.style.display  = (value==0) ? "block" : "none";
@@ -53,16 +31,30 @@ view.changeState = function(value){
 	this.size.width = (value==CAMERA_STATE || value==REALTIME_STATE) ? this.video.videoWidth : this.img.width;
 	this.size.height = (value==CAMERA_STATE || value==REALTIME_STATE) ? this.video.videoHeight : this.img.height;
 	this.resize();
-	if (value == 1)
+	if (value == CAMERA_STATE)
 	{
-		//this.ctx.drawImage(this.img, 0, 0, this.w, this.h);
-		//this.imgData = this.ctx.getImageData(0, 0, this.w, this.h);
-		this.video.pause();
-	}
-	else
-	{
+		this.canvas.style.display = 'none';
+		this.video.style.display  = 'block';
 		this.video.play();
 	}	
+	else if (value == REALTIME_STATE)
+	{
+		this.video.style.display  = 'none';
+		this.canvas.style.display = 'block';
+		this.video.play();
+    	this.timer = compatibility.requestAnimationFrame(view.realtime);
+	}	
+	else if (value == IMAGE_STATE)
+	{
+		this.video.style.display  = 'none';
+		this.canvas.style.display = 'block';
+		if (window.stream)
+			window.stream.getTracks().forEach(function(track) {
+			track.stop();
+		});
+		//this.ctx.drawImage(this.img, 0, 0, this.w, this.h);
+		//this.imgData = this.ctx.getImageData(0, 0, this.w, this.h);
+	}
 }
 
 view.resize = function(){
@@ -99,7 +91,7 @@ view.loadImg = function(path){
 	var that = this;
 	img.onload = function(){
 		canvas.img = img;
-		canvas.changeState(1);
+		view.changeState(IMAGE_STATE);
 		message.show('GREAT! Now choose the average point.');
 	}		
 }
@@ -121,7 +113,29 @@ view.changeCamera = function(){
 		window.stream.getTracks().forEach(function(track) {
 			track.stop();
 		});
-   navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
+   	navigator.mediaDevices.enumerateDevices().then(
+   		function(deviceInfos){
+			view.devices.empty();
+			var lastDevice = null;
+			for (var i = 0; i !== deviceInfos.length; ++i) 
+			{
+				var deviceInfo = deviceInfos[i];
+				if (deviceInfo.kind === 'videoinput')
+				{
+					view.devices.add(deviceInfo.deviceId, deviceInfo.label);
+					lastDevice = deviceInfo.label;		
+				}
+			}
+			if (view.devices.current == null)
+				view.devices.current = view.devices.items.last().id;
+			else
+				view.devices.next();
+			var constraints = {
+				video: {deviceId: {exact: view.devices.getCurrent()} }
+			};
+			navigator.mediaDevices.getUserMedia(constraints).then(view.getStream).catch(view.handleError);
+		}
+   	).catch(view.handleError);
 }
 
 view.init = function(){		
@@ -136,7 +150,7 @@ view.init = function(){
 	
 	this.video.addEventListener('loadeddata', 
 		function(){			
-            view.changeState(CAMERA_STATE);
+            view.changeState(REALTIME_STATE);
 		}
 	);	
 
@@ -147,6 +161,37 @@ view.init = function(){
 		  }
 	}
 
-	//navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
 	view.changeCamera();	
+}
+
+view.setRealTime = function(){
+	if (view.state == REALTIME_STATE)
+	{
+		compatibility.cancelAnimationFrame(this.timer);
+		view.changeState(CAMERA_STATE);	
+	}
+	else
+		view.changeState(REALTIME_STATE);
+}
+
+view.realtime = function(){
+    compatibility.requestAnimationFrame(view.realtime);
+	if (view.video.readyState === view.video.HAVE_ENOUGH_DATA) {
+		var
+		size=view.size.width*view.size.height,
+		mapmag = new Int32Array(size), 
+		mapdir = {x: new Int32Array(size),
+					y: new Int32Array(size)};
+
+		view.ctx.drawImage(view.video, 0, 0, view.size.width, view.size.height);
+		var imgdata = view.ctx.getImageData(0, 0, view.size.width, view.size.height),
+			input = imgdata.getGrayChannel();
+		for (var i = 0; i<imgdata.data.length; i+=4)
+		{
+			imgdata.data[i]=imgdata.data[i+1]=0;
+		}
+		//fastSobel(input, mapmag, mapdir, canvas.w,canvas.h);
+		//imgdata.setGrayChannel(mapmag);
+		view.ctx.putImageData(imgdata, 0, 0);
+	}
 }

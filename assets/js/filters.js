@@ -4,11 +4,13 @@ var filters = {
 }
 
 var fastSobel = function(input, mapMag, mapDir, w,h) {
-    var x=y=1,
+    var x=1,
+        y=1,
     	pRow=0,
     	row=w,
-    	nRow=w+w;
-    	difx=dify=0;
+    	nRow=w+w,
+    	difx=0,
+        dify=0;
 
     for(; y < h-1; y++, row+=w, pRow+=w, nRow+=w) {
         for(x = 1; x < w-1; x++) {        	

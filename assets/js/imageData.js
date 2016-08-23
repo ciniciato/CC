@@ -8,7 +8,7 @@ ImageData.prototype.duplicate = function(){
 }
 
 ImageData.prototype.getGrayChannel = function(){
-	var newImg = new Uint8ClampedArray(this.width*this.height), i = iN = 0, len = this.data.length;
+	var newImg = new Uint8ClampedArray(this.width*this.height), i = 0, iN = 0, len = this.data.length;
 	for (; i < len; i+=4, iN++)
 		newImg[iN] = 0.298 * this.data[i] + 0.586 * this.data[i+1] + 0.114 * this.data[i+2];
 	return newImg;
