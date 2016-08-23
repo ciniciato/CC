@@ -90,9 +90,11 @@ view.loadImg = function(path){
 
 view.handleError = function(error){
 	console.log(error);
+	message.show(error);
 }
 
 view.gotStream = function(stream){
+	message.show(stream);
 	window.stream = stream; 
 	this.video.srcObject = stream;
 	return navigator.mediaDevices.enumerateDevices();
@@ -106,7 +108,7 @@ view.changeCamera = function(){
 	};	  
 	message.show('Camera:'+view.devices.currentID);
 	navigator.mediaDevices.getUserMedia(constraints).
-		then(this.gotStream).catch(this.handleError);	
+			then(this.gotStream).catch(this.handleError);	
 }
 
 view.init = function(){		
