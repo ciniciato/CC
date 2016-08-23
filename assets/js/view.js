@@ -112,7 +112,6 @@ view.init = function(){
 	window.onresize = function(event){
 		view.changeState(view.state);
 	}; 			
-
 	this.container = document.getElementById('main_container');
 	this.video  = document.getElementById('video');
 	this.canvas = document.getElementById('canvas');
@@ -123,7 +122,6 @@ view.init = function(){
             view.changeState(CAMERA_STATE);
 		}
 	);	
-	
 	navigator.mediaDevices.getUserMedia({video:true}).
 			then(this.gotStream).then(this.getDevices).catch(this.handleError);	
 }
