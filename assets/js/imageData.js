@@ -1,4 +1,4 @@
-'use strict';
+//	'use strict';
 
 ImageData.prototype.duplicate = function(){
 	var newImg = new ImageData(this.width, this.height), i = 0, len = this.data.length;
@@ -15,7 +15,7 @@ ImageData.prototype.getGrayChannel = function(){
 }
 
 ImageData.prototype.getGrayChannelNormalized = function(){
-	var newImg = new Float32Array(this.width*this.height), i = iN = 0, len = this.data.length;
+	var newImg = new Float32Array(this.width*this.height), i = 0, iN = 0, len = this.data.length;
 	for (; i < len; i+=4, iN++)
 		newImg[iN] = (0.298 * this.data[i] + 0.586 * this.data[i+1] + 0.114 * this.data[i+2])/255;
 	return newImg;

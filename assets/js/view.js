@@ -193,10 +193,20 @@ view.stepRealtime = function(){
 	if (view.realtime && view.video.readyState === view.video.HAVE_ENOUGH_DATA) {
 		view.ctx.drawImage(view.video, 0, 0, view.size.width, view.size.height);
 		var imgdata = view.ctx.getImageData(0, 0, view.size.width, view.size.height);
-		for (var i = 0; i<imgdata.data.length; i+=4)
-		{
-			imgdata.data[i]=imgdata.data[i+1]=0;
-		}
+		var
+		nData = imgdata.getGrayChannelNormalized(),//normalized 
+		iData = new Float32Array(nData.length),
+		oData = new Uint8ClampedArray(nData.length);//output data
+		
+		integralize(nData, iData, view.size.width, view.size.height);
+		adaptiveThreshold(nData, iData, oData, 
+								view.size.width, view.size.height, 
+								10, 10,
+								.9, false);
+		imgdata.setGrayChannel(oData);
+		
+		
+		
 		view.ctx.putImageData(imgdata, 0, 0);
 	}
 }
