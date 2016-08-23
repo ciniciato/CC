@@ -12,7 +12,7 @@ var List = function(){
 List.prototype.getCurrent = function(){
 	var item = this.items.find(o => o.id === this.currentID);
 	if (item === undefined) item = this.items[0];
-	return item.val;		
+	return (this.size == 0) ? false : item.val;		
 }
 
 List.prototype.get = function(id){

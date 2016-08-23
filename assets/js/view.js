@@ -36,14 +36,6 @@ view.getDevices = function(deviceInfos){
 			lastDevice = deviceInfo.label;		
 		}
 	}
-
-	view.devices.currentID = lastDevice;
-
-	var constraint = {
-		video: {deviceId: {exact: view.devices.getCurrent()} }
-	};
-
-	navigator.mediaDevices.getUserMedia(constraint).then(view.getStream).catch(view.handleError);
 }
 
 view.changeState = function(value){
@@ -113,12 +105,20 @@ view.getStream = function(stream){
 	message.show('success');
 	window.stream = stream; 
 	view.video.srcObject = stream;	
+  	return navigator.mediaDevices.enumerateDevices();
 }
 
 view.changeCamera = function(){
-	if (window.stream) window.stream.stop();
+	if (window.stream)
+		window.stream.getTracks().forEach(function(track) {
+			track.stop();
+		});
 	view.devices.next();
-	navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
+	var constraints = {
+		video: {deviceId: view.devices.getCurrent() ? {exact: view.devices.getCurrent()} : undefined}
+	};
+  	navigator.mediaDevices.getUserMedia(constraints).
+    	then(view.getStream).then(view.getDevices).catch(view.handleError)
 }
 
 view.init = function(){		
@@ -144,6 +144,7 @@ view.init = function(){
 		  }
 	}
 
+	navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
 	view.changeCamera();
 
 	
