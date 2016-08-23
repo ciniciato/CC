@@ -98,7 +98,7 @@ view.handleError = function(error){
 view.gotStream = function(stream){
 	message.show('success');
 	window.stream = stream; 
-	this.video.srcObject = stream;
+	this.video.srcObject = stream;	
 	return navigator.mediaDevices.enumerateDevices();
 }
 
@@ -111,7 +111,7 @@ view.changeCamera = function(){
 		video: {deviceId: {exact: view.devices.current} }
 	};	  
 	navigator.mediaDevices.getUserMedia(constraints).
-			then(this.gotStream).catch(this.handleError);	
+			then(view.gotStream).catch(view.handleError);	
 	//message.show('success'+stream);
 }
 
