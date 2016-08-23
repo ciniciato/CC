@@ -21,7 +21,6 @@ control.takePhoto = function(){
 }
 		
 control.loadPhoto = function(evt) {
-	console.log
 	var files = evt.target.files;
 	for (var i = 0, f; f = files[i]; i++) {
 	  if (!f.type.match('image.*'))
@@ -31,7 +30,7 @@ control.loadPhoto = function(evt) {
 		return function(e) {
 			var path = e.target.result,
 				fileName = escape(theFile.name);
-			canvas.loadImg(path);
+			view.loadImg(path);
 		};
 	  })(f);
 	  reader.readAsDataURL(f);
@@ -42,8 +41,10 @@ control.snap = function(){
 	var el = document.getElementById('snap_button');
 	el.style.display='none';
 				
-	canvas.img = canvas.video;
-	canvas.changeState(1);
+	var previousState = view.state;
+
+	view.img = view.video;
+	view.changeState(IMAGE_STATE);
 	
 	message.show('Can we count on it?');
 	message.confirm.show(
@@ -54,7 +55,9 @@ control.snap = function(){
 			}
 			else
 			{					
-				control.takePhoto();
+				el.style.display='block';
+				view.changeState(previousState);
+				message.show('TAKE A PHOTO!');
 			}
 		}
 	);

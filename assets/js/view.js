@@ -13,8 +13,10 @@ const
 	FRONTCAMERA = { video: { facingMode: "user" } };
 	
 var view = {
-	state: 0,
+	state: null,
+	realtime: false,
 	timer: null,
+	img: null,	
 	container: null,
 	canvas: null,
 	video: null,
@@ -26,11 +28,14 @@ var view = {
 
 view.changeState = function(value){
 	this.state = value;
-	this.video.style.display  = (value==0) ? "block" : "none";
-	this.canvas.style.display = (value==0) ? "none"  : "block";
-	this.size.width = (value==CAMERA_STATE || value==REALTIME_STATE) ? this.video.videoWidth : this.img.width;
-	this.size.height = (value==CAMERA_STATE || value==REALTIME_STATE) ? this.video.videoHeight : this.img.height;
-	this.resize();
+	this.video.style.display  = (value==CAMERA_STATE) ? "block" : "none";
+	this.canvas.style.display = (value==CAMERA_STATE) ? "none"  : "block";
+
+	view.realtime = false;
+	compatibility.cancelAnimationFrame(this.timer);
+
+	view.resize();
+
 	if (value == CAMERA_STATE)
 	{
 		this.canvas.style.display = 'none';
@@ -41,23 +46,23 @@ view.changeState = function(value){
 	{
 		this.video.style.display  = 'none';
 		this.canvas.style.display = 'block';
+		this.realtime = true;
 		this.video.play();
-    	this.timer = compatibility.requestAnimationFrame(view.realtime);
+    	this.timer = compatibility.requestAnimationFrame(view.stepRealtime);
 	}	
 	else if (value == IMAGE_STATE)
 	{
+		this.video.pause();
 		this.video.style.display  = 'none';
 		this.canvas.style.display = 'block';
-		if (window.stream)
-			window.stream.getTracks().forEach(function(track) {
-			track.stop();
-		});
-		//this.ctx.drawImage(this.img, 0, 0, this.w, this.h);
-		//this.imgData = this.ctx.getImageData(0, 0, this.w, this.h);
+		view.ctx.drawImage(view.img, 0, 0, view.size.width, view.size.height);
 	}
 }
 
 view.resize = function(){
+	view.size.width = (view.state==CAMERA_STATE || view.state==REALTIME_STATE) ? view.video.videoWidth : view.img.width;
+	view.size.height = (view.state==CAMERA_STATE || view.state==REALTIME_STATE) ? view.video.videoHeight : view.img.height;
+
 	var ch = this.container.offsetHeight,
 		cw = this.container.offsetWidth,
 		objscale  = this.size.width/this.size.height,
@@ -83,6 +88,9 @@ view.resize = function(){
 	this.canvas.style.top = this.video.style.top = t+'px';
 	this.position.left = l; 
 	this.canvas.style.left = this.video.style.left = l+'px';
+
+	if (view.state == IMAGE_STATE)
+		view.ctx.drawImage(view.img, 0, 0, view.size.width, view.size.height);
 }
 
 view.loadImg = function(path){
@@ -90,7 +98,7 @@ view.loadImg = function(path){
 	img.src = path;
 	var that = this;
 	img.onload = function(){
-		canvas.img = img;
+		view.img = img;
 		view.changeState(IMAGE_STATE);
 		message.show('GREAT! Now choose the average point.');
 	}		
@@ -98,21 +106,26 @@ view.loadImg = function(path){
 
 view.handleError = function(error){
 	console.log(error);
-	message.show('error');
 }
 
 view.getStream = function(stream){
-	message.show('success');
 	window.stream = stream; 
 	view.video.srcObject = stream;	
   	return navigator.mediaDevices.enumerateDevices();
 }
 
 view.changeCamera = function(){
+	if (view.state === IMAGE_STATE) 
+		if (view.realtime) 
+			view.changeState(REALTIME_STATE);
+		else
+			view.changeState(CAMERA_STATE);
+
 	if (window.stream)
 		window.stream.getTracks().forEach(function(track) {
 			track.stop();
 		});
+
    	navigator.mediaDevices.enumerateDevices().then(
    		function(deviceInfos){
 			view.devices.empty();
@@ -140,7 +153,7 @@ view.changeCamera = function(){
 
 view.init = function(){		
 	window.onresize = function(event){
-		view.changeState(view.state);
+		view.resize();
 	}; 			
 
 	this.container = document.getElementById('main_container');
@@ -150,7 +163,11 @@ view.init = function(){
 	
 	this.video.addEventListener('loadeddata', 
 		function(){			
-            view.changeState(REALTIME_STATE);
+			if (view.state === null)
+			{
+            	view.changeState(REALTIME_STATE);
+				view.resize();
+			}
 		}
 	);	
 
@@ -166,32 +183,20 @@ view.init = function(){
 
 view.setRealTime = function(){
 	if (view.state == REALTIME_STATE)
-	{
-		compatibility.cancelAnimationFrame(this.timer);
 		view.changeState(CAMERA_STATE);	
-	}
 	else
 		view.changeState(REALTIME_STATE);
 }
 
-view.realtime = function(){
-    compatibility.requestAnimationFrame(view.realtime);
-	if (view.video.readyState === view.video.HAVE_ENOUGH_DATA) {
-		var
-		size=view.size.width*view.size.height,
-		mapmag = new Int32Array(size), 
-		mapdir = {x: new Int32Array(size),
-					y: new Int32Array(size)};
-
+view.stepRealtime = function(){
+    if (view.realtime) compatibility.requestAnimationFrame(view.stepRealtime);
+	if (view.realtime && view.video.readyState === view.video.HAVE_ENOUGH_DATA) {
 		view.ctx.drawImage(view.video, 0, 0, view.size.width, view.size.height);
-		var imgdata = view.ctx.getImageData(0, 0, view.size.width, view.size.height),
-			input = imgdata.getGrayChannel();
+		var imgdata = view.ctx.getImageData(0, 0, view.size.width, view.size.height);
 		for (var i = 0; i<imgdata.data.length; i+=4)
 		{
 			imgdata.data[i]=imgdata.data[i+1]=0;
 		}
-		//fastSobel(input, mapmag, mapdir, canvas.w,canvas.h);
-		//imgdata.setGrayChannel(mapmag);
 		view.ctx.putImageData(imgdata, 0, 0);
 	}
 }
