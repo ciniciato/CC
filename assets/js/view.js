@@ -23,18 +23,19 @@ var view = {
 	position: {left: 0, top: 0}
 }
 
+
 view.getDevices = function(deviceInfos){
 	view.devices.clear();
 	for (var i = 0; i !== deviceInfos.length; ++i) 
 	{
 		var deviceInfo = deviceInfos[i];
-		if (deviceInfo.kind === 'videoinput')
-			view.devices.add({stream: deviceInfo.deviceId, label: deviceInfo.label});		
+		if (deviceInfo.kind === 'videoinput'){
+			view.devices.add(deviceInfo.deviceId, deviceInfo.label);		
+		}
 	}
-	message.show('devices:'+view.devices.size);
 
 	var constraint = {
-		video: {deviceId: {exact: view.devices.current.stream} }
+		video: {deviceId: {exact: view.devices.getCurrent()} }
 	};
 
 	navigator.mediaDevices.getUserMedia(constraint).then(view.getStream).catch(view.handleError);
@@ -107,17 +108,12 @@ view.getStream = function(stream){
 	message.show('success');
 	window.stream = stream; 
 	view.video.srcObject = stream;	
-	return navigator.mediaDevices.enumerateDevices();
 }
 
 view.changeCamera = function(){
+	if (window.stream) window.stream.stop();
 	view.devices.next();
-	message.show(view.devices.current.label);
-	var constraints = {
-		video: {deviceId: {exact: view.devices.current.stream} }
-	};	  
-	navigator.mediaDevices.getUserMedia(constraints).
-			then(view.gotStream).catch(view.handleError);	
+	navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
 }
 
 view.init = function(){		
@@ -143,5 +139,7 @@ view.init = function(){
 		  }
 	}
 
-	navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
+	view.changeCamera();
+
+	
 }

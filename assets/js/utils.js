@@ -26,6 +26,12 @@ var constraints = window.constraints = {
 	video: true
 };
 
+Array.prototype.last = function(pos){
+    var ind = (pos == undefined) ? 1 : (1 + Math.abs(pos));
+    return this[this.length - ind];
+}; 
+
+
 function handleSuccess(stream) {
   var videoTracks = stream.getVideoTracks();
   console.log('Got stream with constraints:', constraints);
