@@ -43,11 +43,51 @@ var compatibility = (function() {
             }
         }
 
+        exitFullscreen = function(){
+            if (document.exitFullscreen)
+                document.exitFullscreen();
+            else if (document.mozCancelFullScreen)
+                document.mozCancelFullScreen();
+            else if (document.webkitExitFullscreen)
+                document.webkitExitFullscreen();
+            else if (document.msExitFullscreen)
+                document.msExitFullscreen();
+            else if (document.webkitExitFullscreen)
+                document.webkitExitFullscreen();
+        }
+
+        fullscreenEnabled = function(){
+            if (document.fullscreenEnabled)
+                return document.fullscreenEnabled;
+            else if (document.webkitFullscreenEnabled)
+                return document.webkitFullscreenEnabled;
+            else if (document.mozFullScreenEnabled)
+                return document.mozFullScreenEnabled;
+            else if (document.msFullscreenEnabled)
+                return document.msFullscreenEnabled;
+            else
+                return false;
+        }
+
+        onfullscreenchange = function(callback){
+            if (document.onfullscreenchange !== undefined)
+                document.fullscreenEnabled = callback;
+            else if (document.onwebkitfullscreenchange !== undefined)
+                document.onwebkitfullscreenchange = callback;
+            else if (document.onmozfullscreenchange !== undefined)
+                document.onmozfullscreenchange = callback;
+            else if (document.MSFullscreenChange !== undefined)
+                document.MSFullscreenChange = callback;
+        }
 
     return {
         URL: URL,
         requestAnimationFrame: requestAnimationFrame,
         cancelAnimationFrame: cancelAnimationFrame,
-        requestFullScreen: requestFullScreen
+
+        requestFullScreen: requestFullScreen,
+        exitFullscreen: exitFullscreen,
+        fullscreenEnabled: fullscreenEnabled,
+        onfullscreenchange: onfullscreenchange 
     };
 })();

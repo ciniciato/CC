@@ -1,20 +1,37 @@
 'use strict';
 
 var control = {
+	fullscreen: false
 }
-
-//<input type="file" accept="image/*;capture=camera"> tirar foto
 
 control.init = function(){
 	view.init();
 	document.getElementById('openFile').addEventListener('change', control.loadPhoto, false);
 	document.getElementById('btn_changecamera').addEventListener('click', view.changeCamera, false);
 	document.getElementById('btn_realtime').addEventListener('click', view.setRealTime, false);
-	document.getElementById('btn_fullscreen').addEventListener('click', control.fullscreen, false);
+	document.getElementById('btn_fullscreen').addEventListener('click', control.setFullscreen, false);
+	document.getElementById('btn_config').addEventListener('click', control.showconfig, false);
+
+	compatibility.onfullscreenchange(
+		function(e){
+			control.fullscreen = !control.fullscreen;
+			if (control.fullscreen)
+				document.getElementById('btn_fullscreen').className = 'fa fa-compress';
+			else
+				document.getElementById('btn_fullscreen').className = 'fa fa-expand';
+		}
+	);
+
 }
 
-control.fullscreen = function(){
-	compatibility.requestFullScreen();
+control.setFullscreen = function(){
+	if (control.fullscreen)
+		compatibility.exitFullscreen();	
+	else
+		compatibility.requestFullScreen();
+}
+
+control.showconfig = function(){
 }
 		
 control.loadPhoto = function(evt) {
