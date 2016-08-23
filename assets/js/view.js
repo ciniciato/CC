@@ -27,7 +27,7 @@ view.getDevices = function(deviceInfos){
 	{
 		var deviceInfo = deviceInfos[i];
 		if (deviceInfo.kind === 'videoinput')
-			view.devices.add(deviceInfo.deviceId);		
+			view.devices.add({stream: deviceInfo.deviceId, label: deviceInfo.label});		
 	}
 	message.show('devices:'+view.devices.size);
 }
@@ -106,9 +106,9 @@ view.changeCamera = function(){
 	view.video.pause();
 	var ant = view.devices.currentID;
 	view.devices.next();
-	message.show(ant+'Camera:'+view.devices.currentID);
+	message.show(ant+'Camera:'+view.devices.current.label);
 	var constraints = {
-		video: {deviceId: {exact: view.devices.current} }
+		video: {deviceId: {exact: view.devices.current.stream} }
 	};	  
 	navigator.mediaDevices.getUserMedia(constraints).
 			then(view.gotStream).catch(view.handleError);	
