@@ -26,13 +26,18 @@ var view = {
 
 view.getDevices = function(deviceInfos){
 	view.devices.clear();
+	var lastDevice = null;
 	for (var i = 0; i !== deviceInfos.length; ++i) 
 	{
 		var deviceInfo = deviceInfos[i];
-		if (deviceInfo.kind === 'videoinput'){
-			view.devices.add(deviceInfo.deviceId, deviceInfo.label);		
+		if (deviceInfo.kind === 'videoinput')
+		{
+			view.devices.add(deviceInfo.deviceId, deviceInfo.label);
+			lastDevice = deviceInfo.label;		
 		}
 	}
+
+	view.devices.currentID = lastDevice;
 
 	var constraint = {
 		video: {deviceId: {exact: view.devices.getCurrent()} }
