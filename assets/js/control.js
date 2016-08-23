@@ -10,14 +10,11 @@ control.init = function(){
 	document.getElementById('openFile').addEventListener('change', control.loadPhoto, false);
 	document.getElementById('btn_changecamera').addEventListener('click', view.changeCamera, false);
 	document.getElementById('btn_realtime').addEventListener('click', view.setRealTime, false);
+	document.getElementById('btn_fullscreen').addEventListener('click', control.fullscreen, false);
 }
-		
-control.takePhoto = function(){
-	//canvas.changeState(0);
-	//document.getElementById('snap_button').style = 'display:block';
-	//message.show('TAKE A PHOTO!');
-	//message.confirm.hide();
-	//view.changeCamera();
+
+control.fullscreen = function(){
+	compatibility.requestFullScreen();
 }
 		
 control.loadPhoto = function(evt) {
@@ -35,7 +32,7 @@ control.loadPhoto = function(evt) {
 	  })(f);
 	  reader.readAsDataURL(f);
 	}
- }
+}
 
 control.snap = function(){
 	var el = document.getElementById('snap_button');
