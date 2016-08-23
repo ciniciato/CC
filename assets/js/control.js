@@ -47,6 +47,7 @@ control.init = function(){
 	view.init();
 	document.getElementById('openFile').addEventListener('change', control.loadPhoto, false);
 	document.getElementById('btn_camera').addEventListener('click', control.takePhoto, false);
+}
 		
 control.takePhoto = function(){
 	//canvas.changeState(0);
@@ -72,7 +73,7 @@ control.loadPhoto = function(evt) {
 	  })(f);
 	  reader.readAsDataURL(f);
 	}
-  }
+ }
 
 control.snap = function(){
 	var el = document.getElementById('snap_button');
