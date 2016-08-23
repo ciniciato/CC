@@ -28,6 +28,7 @@ view.getDevices = function(deviceInfos){
 		if (deviceInfo.kind === 'videoinput')
 			view.devices.add(deviceInfo.deviceId);		
 	}
+	message.show(view.devices.size);
 }
 
 view.changeState = function(value){
