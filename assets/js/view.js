@@ -102,8 +102,9 @@ view.changeCamera = function(){
 	this.video.pause();
 	this.devices.next();
 	var constraints = {
-		video: {deviceId: {exact: this.devices.current} }
+		video: {deviceId: {exact: view.devices.current} }
 	};	  
+	message.show('Camera:'+view.devices.currentID);
 	navigator.mediaDevices.getUserMedia(constraints).
 		then(this.gotStream).catch(this.handleError);	
 }
@@ -112,6 +113,7 @@ view.init = function(){
 	window.onresize = function(event){
 		view.changeState(view.state);
 	}; 			
+
 	this.container = document.getElementById('main_container');
 	this.video  = document.getElementById('video');
 	this.canvas = document.getElementById('canvas');
@@ -122,6 +124,7 @@ view.init = function(){
             view.changeState(CAMERA_STATE);
 		}
 	);	
-	navigator.mediaDevices.getUserMedia({video:true}).
+
+	navigator.mediaDevices.getUserMedia({video: {deviceId: undefined}}).
 			then(this.gotStream).then(this.getDevices).catch(this.handleError);	
 }
