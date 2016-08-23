@@ -23,7 +23,8 @@ var view = {
 
 view.getDevices = function(deviceInfos){
 	view.devices.clear();
-	for (var i = 0; i !== deviceInfos.length; ++i) {
+	for (var i = 0; i !== deviceInfos.length; ++i) 
+	{
 		var deviceInfo = deviceInfos[i];
 		if (deviceInfo.kind === 'videoinput')
 			view.devices.add(deviceInfo.deviceId);		
