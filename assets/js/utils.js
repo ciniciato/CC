@@ -1,3 +1,5 @@
+'use strict';
+
 var message = {
 	el: document.getElementById('hint'),
 	show: function(txt){

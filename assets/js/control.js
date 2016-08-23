@@ -1,15 +1,9 @@
+'use strict';
+
 var control = {
 }
 
 //<input type="file" accept="image/*;capture=camera"> tirar foto
-//{ audio: true, video: { facingMode: { exact: "environment" } } } rearcamera
-//{ audio: true, video: { facingMode: "user" } } frontcamera
-/*
-video: {
-    width: { min: 1024, ideal: 1280, max: 1920 },
-    height: { min: 776, ideal: 720, max: 1080 }
-  }
-*/
 
 function start() {
   if (window.stream) {

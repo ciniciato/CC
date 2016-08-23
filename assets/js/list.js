@@ -1,3 +1,5 @@
+'use strict';
+
 var List = function(){
 	this.current = null;
 	this.currentID = null;

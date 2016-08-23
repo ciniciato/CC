@@ -1,7 +1,9 @@
+'use strict';
+
 var filters = {
 }
 
-fastSobel = function(input, mapMag, mapDir, w,h) {
+var fastSobel = function(input, mapMag, mapDir, w,h) {
     var x=y=1,
     	pRow=0,
     	row=w,

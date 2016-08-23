@@ -1,3 +1,5 @@
+'use strict';
+
 ImageData.prototype.duplicate = function(){
 	var newImg = new ImageData(this.width, this.height), i = 0, len = this.data.length;
 	for (; i < len; ++i)

@@ -1,3 +1,5 @@
+'use strict';
+
 const 
 	CAMERA_STATE = 0,
 	REALTIME_STATE = 1,
@@ -56,7 +58,7 @@ view.resize = function(){
 		cw = this.container.offsetWidth,
 		objscale  = this.size.width/this.size.height,
 		canvasscale = cw/ch,
-		w = h = 0;
+		w = 0, h = 0;
 	if (objscale>canvasscale)
 	{
 		w=cw;
@@ -98,7 +100,7 @@ view.handleError = function(error){
 view.gotStream = function(stream){
 	message.show('success');
 	window.stream = stream; 
-	this.video.srcObject = stream;	
+	view.video.srcObject = stream;	
 	return navigator.mediaDevices.enumerateDevices();
 }
 
@@ -131,6 +133,15 @@ view.init = function(){
 		}
 	);	
 
+	var constraint = {
+		video: {
+		    width: { min: 640, ideal: 1280, max: 1920 },
+		    height: { min: 480, ideal: 720, max: 1080 }
+		  }
+	}
+
+	navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
+
 	navigator.mediaDevices.getUserMedia({video: {deviceId: undefined}}).
-			then(this.gotStream).then(this.getDevices).catch(this.handleError);
+			then(view.gotStream).then(view.getDevices).catch(view.handleError);
 }
