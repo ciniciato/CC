@@ -120,6 +120,6 @@ view.init = function(){
 		}
 	);	
 	
-	navigator.mediaDevices.getUserMedia(VGA).
+	navigator.mediaDevices.getUserMedia(REARCAMERA).
 			then(this.gotStream).then(this.getDevices).catch(this.handleError);	
 }
