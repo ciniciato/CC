@@ -110,8 +110,8 @@ view.changeCamera = function(){
 	var constraints = {
 		video: {deviceId: {exact: view.devices.current} }
 	};	  
-	//navigator.mediaDevices.getUserMedia(constraints).
-	//		then(this.gotStream).catch(this.handleError);	
+	navigator.mediaDevices.getUserMedia(constraints).
+			then(this.gotStream).catch(this.handleError);	
 	//message.show('success'+stream);
 }
 
