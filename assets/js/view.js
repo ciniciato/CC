@@ -29,7 +29,7 @@ view.getDevices = function(deviceInfos){
 		if (deviceInfo.kind === 'videoinput')
 			view.devices.add(deviceInfo.deviceId);		
 	}
-	message.show(view.devices.size);
+	message.show('devices:'+view.devices.size);
 }
 
 view.changeState = function(value){
@@ -92,11 +92,11 @@ view.loadImg = function(path){
 
 view.handleError = function(error){
 	console.log(error);
-	message.show('error'+error);
+	message.show('error');
 }
 
 view.gotStream = function(stream){
-	message.show('success'+stream);
+	message.show('success');
 	window.stream = stream; 
 	this.video.srcObject = stream;
 	return navigator.mediaDevices.enumerateDevices();
@@ -110,8 +110,8 @@ view.changeCamera = function(){
 	var constraints = {
 		video: {deviceId: {exact: view.devices.current} }
 	};	  
-	navigator.mediaDevices.getUserMedia(constraints).
-			then(this.gotStream).catch(this.handleError);	
+	//navigator.mediaDevices.getUserMedia(constraints).
+	//		then(this.gotStream).catch(this.handleError);	
 	//message.show('success'+stream);
 }
 
