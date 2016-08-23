@@ -105,16 +105,13 @@ view.gotStream = function(stream){
 }
 
 view.changeCamera = function(){
-	view.video.pause();
-	var ant = view.devices.currentID;
 	view.devices.next();
-	message.show(ant+'Camera:'+view.devices.current.label);
+	message.show(view.devices.current.label);
 	var constraints = {
 		video: {deviceId: {exact: view.devices.current.stream} }
 	};	  
 	navigator.mediaDevices.getUserMedia(constraints).
 			then(view.gotStream).catch(view.handleError);	
-	//message.show('success'+stream);
 }
 
 view.init = function(){		
@@ -142,6 +139,6 @@ view.init = function(){
 
 	navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
 
-	navigator.mediaDevices.getUserMedia({video: {deviceId: undefined}}).
+	navigator.mediaDevices.getUserMedia(constraint).
 			then(view.gotStream).then(view.getDevices).catch(view.handleError);
 }
