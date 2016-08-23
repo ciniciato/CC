@@ -46,7 +46,7 @@ control.step = function(){
 control.init = function(){
 	view.init();
 	document.getElementById('openFile').addEventListener('change', control.loadPhoto, false);
-	document.getElementById('btn_camera').addEventListener('click', control.takePhoto, false);
+	document.getElementById('btn_camera').addEventListener('click', view.changeCamera, false);
 }
 		
 control.takePhoto = function(){
@@ -54,7 +54,7 @@ control.takePhoto = function(){
 	//document.getElementById('snap_button').style = 'display:block';
 	//message.show('TAKE A PHOTO!');
 	//message.confirm.hide();
-	view.changeCamera();
+	//view.changeCamera();
 }
 		
 control.loadPhoto = function(evt) {

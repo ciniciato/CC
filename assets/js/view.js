@@ -103,9 +103,9 @@ view.gotStream = function(stream){
 }
 
 view.changeCamera = function(){
-	this.video.pause();
+	view.video.pause();
 	var ant = view.devices.currentID;
-	this.devices.next();
+	view.devices.next();
 	message.show(ant+'Camera:'+view.devices.currentID);
 	var constraints = {
 		video: {deviceId: {exact: view.devices.current} }
