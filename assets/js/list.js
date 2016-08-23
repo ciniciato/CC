@@ -2,7 +2,8 @@
 
 var List = function(){
 	this.current = null;
-	this.id      = 0;
+	this.numID   = 0;
+	this.id      = '';
 	this.size    = 0;
 	this.items   = new Array();	
 }
@@ -18,10 +19,10 @@ List.prototype.get = function(id){
 }
 
 List.prototype.add = function(value, id){
-	if (id !== undefined)
+	if (id !== undefined && id != '')
 		this.items[this.size++] = {id: id, val: value};
 	else
-		this.items[this.size++] = {id: this.id++, val: value};
+		this.items[this.size++] = {id: this.numID++, val: value};
 }
 
 List.prototype.next = function(){
