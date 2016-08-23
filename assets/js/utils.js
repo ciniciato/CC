@@ -1,7 +1,7 @@
 var message = {
 	el: document.getElementById('hint'),
 	show: function(txt){
-		this.el.innerHTML += txt;
+		this.el.innerHTML += txt+'<br>';
 	},
 	confirm: {
 		el: document.getElementById('acceptmsg'),
