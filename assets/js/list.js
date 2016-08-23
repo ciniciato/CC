@@ -39,6 +39,7 @@ List.prototype.next = function(){
 
 List.prototype.empty = function(){
 	this.items = new Array();
-	this.size = 0;
-	this.id   = 0;
+	this.size  = 0;
+	this.numID = 0;
+	this.id    = '';
 }
