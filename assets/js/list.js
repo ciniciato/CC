@@ -14,6 +14,8 @@ List.prototype.get = function(id){
 
 List.prototype.add = function(value){
 	this.items[this.size++] = {id: this.id++, val: value};
+	this.currentID = this.id-1;
+	this.current   = value;
 }
 
 List.prototype.next = function(){

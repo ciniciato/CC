@@ -32,6 +32,12 @@ view.getDevices = function(deviceInfos){
 			view.devices.add({stream: deviceInfo.deviceId, label: deviceInfo.label});		
 	}
 	message.show('devices:'+view.devices.size);
+
+	var constraint = {
+		video: {deviceId: {exact: view.devices.current.stream} }
+	};
+
+	navigator.mediaDevices.getUserMedia(constraint).then(view.getStream).catch(view.handleError);
 }
 
 view.changeState = function(value){
@@ -97,7 +103,7 @@ view.handleError = function(error){
 	message.show('error');
 }
 
-view.gotStream = function(stream){
+view.getStream = function(stream){
 	message.show('success');
 	window.stream = stream; 
 	view.video.srcObject = stream;	
@@ -138,7 +144,4 @@ view.init = function(){
 	}
 
 	navigator.mediaDevices.enumerateDevices().then(view.getDevices).catch(view.handleError);
-
-	navigator.mediaDevices.getUserMedia(constraint).
-			then(view.gotStream).then(view.getDevices).catch(view.handleError);
 }
