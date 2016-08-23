@@ -90,11 +90,11 @@ view.loadImg = function(path){
 
 view.handleError = function(error){
 	console.log(error);
-	message.show(error);
+	message.show('error'+error);
 }
 
 view.gotStream = function(stream){
-	message.show(stream);
+	message.show('success'+stream);
 	window.stream = stream; 
 	this.video.srcObject = stream;
 	return navigator.mediaDevices.enumerateDevices();
