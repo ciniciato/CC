@@ -152,6 +152,7 @@ body, html{
 	box-sizing: border-box;
 	padding: 10px 15px;
 	color:#2A69B0;
+	display:none;
 }
 
 
@@ -170,4 +171,14 @@ body, html{
 	top:10px;
 	font-size:30px;
 	cursor:pointer;
+}
+
+
+.blur {
+  -webkit-filter: blur(3px);
+  filter: blur(10px);
+}
+
+#bufcanvas {
+	display:none;
 }

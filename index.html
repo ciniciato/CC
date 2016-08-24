@@ -24,7 +24,6 @@
 			</span>
 			
 			<span id="hint">
-				TAKE A PHOTO!
 			</span>
 			
 			<div id="box_config">
@@ -32,15 +31,25 @@
 				<h3>Adaptive Threshold</h3>
 				<span>
 					<label>Threshold:</label>
-					<input id="t_range" type="range" min=".01" max="1" step=".01" value="" oninput="adaptiveThreshold.changeParameters()" />
+					<input id="t_range" type="range" min=".01" max="1" step=".01" value=".1" oninput="adaptiveThreshold.changeParameters()" />
 				</span>
 				<span>
 					<label>Window size:</label> 
-					<input id="w_range" type="range" min=".01" max="1" step=".01" value="" oninput="adaptiveThreshold.changeParameters()" />
+					<input id="w_range" type="range" min=".01" max="1" step=".01" value="10" oninput="adaptiveThreshold.changeParameters()" />
+				</span>
+				
+				<h3>Segment</h3>
+				<span>
+					<label>Min size:</label>
+					<input id="min_range" type="range" min="1" max="500" step="1" value="10" oninput="segment.changeParameters()" />
+				</span>
+				<span>
+					<label>Max size:</label> 
+					<input id="max_range" type="range" min="1" max="500" step="1" value="1000" oninput="segment.changeParameters()" />
 				</span>
 			</div>
 			
-			<div id="top" style="display:none">
+			<div id="top">
 				<ul id="main_menu">
 					<li>
 						<i class="fa fa-image" aria-hidden="true"></i>

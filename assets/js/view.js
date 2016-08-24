@@ -19,6 +19,7 @@ var view = {
 	img: null,	
 	container: null,
 	canvas: null,
+	buff: null,
 	video: null,
 	ctx: null,
 	devices: new List(),
@@ -56,6 +57,7 @@ view.changeState = function(value){
 		this.video.style.display  = 'none';
 		this.canvas.style.display = 'block';
 		view.ctx.drawImage(view.img, 0, 0, view.size.width, view.size.height);
+		view.filter();
 	}
 }
 
@@ -90,9 +92,12 @@ view.resize = function(){
 	this.canvas.style.left = this.video.style.left = l+'px';
 
 	if (view.state == IMAGE_STATE)
+	{
 		view.ctx.drawImage(view.img, 0, 0, view.size.width, view.size.height);
-	
+		view.filter();
+	}
 	adaptiveThreshold.resize();
+	segment.resize();
 }
 
 view.loadImg = function(path){
@@ -102,7 +107,6 @@ view.loadImg = function(path){
 	img.onload = function(){
 		view.img = img;
 		view.changeState(IMAGE_STATE);
-		message.show('GREAT! Now choose the average point.');
 	}		
 }
 
@@ -117,13 +121,14 @@ view.getStream = function(stream){
 }
 
 view.changeCamera = function(){
+	var previousState = view.state;
 	if (view.state === IMAGE_STATE) 
 		if (view.realtime) 
 			view.changeState(REALTIME_STATE);
 		else
 			view.changeState(CAMERA_STATE);
 
-	if (window.stream)
+	if (window.stream && previousState != IMAGE_STATE)
 		window.stream.getTracks().forEach(function(track) {
 			track.stop();
 		});
@@ -143,12 +148,13 @@ view.changeCamera = function(){
 			}
 			if (view.devices.current == null)
 				view.devices.current = view.devices.items.last().id;
-			else
+			else if (previousState != IMAGE_STATE) 
 				view.devices.next();
 			var constraints = {
 				video: {deviceId: {exact: view.devices.getCurrent()} }
 			};
-			navigator.mediaDevices.getUserMedia(constraints).then(view.getStream).catch(view.handleError);
+			if (previousState != IMAGE_STATE) 
+				navigator.mediaDevices.getUserMedia(constraints).then(view.getStream).catch(view.handleError);
 		}
    	).catch(view.handleError);
 }
@@ -194,24 +200,19 @@ view.stepRealtime = function(){
     if (view.realtime) compatibility.requestAnimationFrame(view.stepRealtime);
 	if (view.realtime && view.video.readyState === view.video.HAVE_ENOUGH_DATA) {
 		view.ctx.drawImage(view.video, 0, 0, view.size.width, view.size.height);
-		var imgdata = view.ctx.getImageData(0, 0, view.size.width, view.size.height);
-		
-		adaptiveThreshold.data = imgdata.getGrayChannelNormalized();
-		adaptiveThreshold.apply();
-		//var
-		//nData = imgdata.getGrayChannelNormalized(),//normalized 
-		//iData = new Float32Array(nData.length),
-		//oData = new Uint8ClampedArray(nData.length);//output data
-		
-		/*
-		integralize(nData, iData, view.size.width, view.size.height);
-		adaptiveThreshold(nData, iData, oData, 
-								view.size.width, view.size.height, 
-								10, 10,
-								.99, false);
-			
-		*/
-		imgdata.setGrayChannel(adaptiveThreshold.data);
-		view.ctx.putImageData(imgdata, 0, 0);
+		view.filter();
 	}
+}
+
+view.filter = function(){
+	var imgdata = view.ctx.getImageData(0, 0, view.size.width, view.size.height);		
+	adaptiveThreshold.data = imgdata.getGrayChannelNormalized();
+	adaptiveThreshold.apply();
+	
+	//segment.data = adaptiveThreshold.data;
+//	segment.apply();
+	//imgdata.setGrayChannel(segment.oData);
+	imgdata.setGrayChannel(adaptiveThreshold.data);
+	
+	view.ctx.putImageData(imgdata, 0, 0);
 }

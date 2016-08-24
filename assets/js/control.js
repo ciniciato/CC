@@ -6,6 +6,7 @@ var control = {
 
 control.init = function(){
 	adaptiveThreshold.init();
+	segment.init();
 	view.init();
 	document.getElementById('openFile').addEventListener('change', control.loadPhoto, false);
 	document.getElementById('btn_changecamera').addEventListener('click', view.changeCamera, false);
