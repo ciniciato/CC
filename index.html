@@ -13,7 +13,7 @@
 		<div id="main_container">
 			<canvas id="canvas"></canvas>
 			<video id="video" autoplay></video>
-			
+						
 			<span id="snap_button" onclick="control.snap();">
 				<span class="inside"></span>
 			</span>
@@ -26,7 +26,21 @@
 			<span id="hint">
 				TAKE A PHOTO!
 			</span>
-			<div id="top">
+			
+			<div id="box_config">
+				<a class="btn_close" id="btn_closeConfig"><i class="fa fa-close" aria-hidden="true"></i></a>
+				<h3>Adaptive Threshold</h3>
+				<span>
+					<label>Threshold:</label>
+					<input id="t_range" type="range" min=".01" max="1" step=".01" value="" oninput="adaptiveThreshold.changeParameters()" />
+				</span>
+				<span>
+					<label>Window size:</label> 
+					<input id="w_range" type="range" min=".01" max="1" step=".01" value="" oninput="adaptiveThreshold.changeParameters()" />
+				</span>
+			</div>
+			
+			<div id="top" style="display:none">
 				<ul id="main_menu">
 					<li>
 						<i class="fa fa-image" aria-hidden="true"></i>

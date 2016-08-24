@@ -141,3 +141,33 @@ body, html{
 .loadFile{
 	cursor:pointer;
 }
+
+#box_config{
+	background:rgba(200,200,200,.3);
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	box-sizing: border-box;
+	padding: 10px 15px;
+	color:#2A69B0;
+}
+
+
+#box_config label{
+	display: block;
+}
+
+#box_config input{
+	width:90%;
+}
+
+#box_config .btn_close{
+	color:#B8312E;
+	position:absolute;
+	right:15px;
+	top:10px;
+	font-size:30px;
+	cursor:pointer;
+}

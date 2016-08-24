@@ -5,12 +5,14 @@ var control = {
 }
 
 control.init = function(){
+	adaptiveThreshold.init();
 	view.init();
 	document.getElementById('openFile').addEventListener('change', control.loadPhoto, false);
 	document.getElementById('btn_changecamera').addEventListener('click', view.changeCamera, false);
 	document.getElementById('btn_realtime').addEventListener('click', view.setRealTime, false);
 	document.getElementById('btn_fullscreen').addEventListener('click', control.setFullscreen, false);
-	document.getElementById('btn_config').addEventListener('click', control.showconfig, false);
+	document.getElementById('btn_config').addEventListener('click', control.showConfig, false);
+	document.getElementById('btn_closeConfig').addEventListener('click', control.closeConfig, false);
 
 	compatibility.onfullscreenchange(
 		function(e){
@@ -31,7 +33,14 @@ control.setFullscreen = function(){
 		compatibility.requestFullScreen();
 }
 
-control.showconfig = function(){
+control.showConfig = function(){
+	document.getElementById('top').style.display = 'none';
+	document.getElementById('box_config').style.display = 'block';
+}
+
+control.closeConfig = function(){
+	document.getElementById('box_config').style.display = 'none';
+	document.getElementById('top').style.display = 'block';
 }
 		
 control.loadPhoto = function(evt) {
