@@ -209,10 +209,10 @@ view.filter = function(){
 	adaptiveThreshold.data = imgdata.getGrayChannelNormalized();
 	adaptiveThreshold.apply();
 	
-	//segment.data = adaptiveThreshold.data;
-//	segment.apply();
-	//imgdata.setGrayChannel(segment.oData);
-	imgdata.setGrayChannel(adaptiveThreshold.data);
+	segment.data = adaptiveThreshold.data;
+	segment.apply();
+	imgdata.setGrayChannel(segment.oData);
+//	imgdata.setGrayChannel(adaptiveThreshold.data);
 	
 	view.ctx.putImageData(imgdata, 0, 0);
 }
