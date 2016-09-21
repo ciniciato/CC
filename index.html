@@ -4,78 +4,105 @@
         <meta charset="utf8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
-        <title>CellCount</title>
+        <title>COUNT IT!</title>
+		
+		<!--FONTAWESOME-->
 		<link rel="stylesheet" href="assets/fonts/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="assets/css/style.css">
+		
+		<!--CUSTOM STYLE-->
+        <link rel="stylesheet" href="assets/css/style.css">		
+		
+		<!--FAVICON-->
+		<link rel="apple-touch-icon" sizes="57x57" href="assets/img/favicon/apple-icon-57x57.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="assets/img/favicon/apple-icon-60x60.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="assets/img/favicon/apple-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="assets/img/favicon/apple-icon-76x76.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="assets/img/favicon/apple-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="assets/img/favicon/apple-icon-120x120.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="assets/img/favicon/apple-icon-144x144.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="assets/img/favicon/apple-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicon/apple-icon-180x180.png">
+		<link rel="icon" type="image/png" sizes="192x192"  href="assets/img/favicon/android-icon-192x192.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon/favicon-16x16.png">
+		<link rel="manifest" href="/manifest.json">
+		<meta name="msapplication-TileColor" content="#ffffff">
+		<meta name="msapplication-TileImage" content="assets/img/favicon/ms-icon-144x144.png">
+		<meta name="theme-color" content="#ffffff">
     </head>
 
     <body>    
 		<div id="main_container">
-			<canvas id="canvas"></canvas>
-			<video id="video" autoplay></video>
-						
-			<span id="snap_button" onclick="control.snap();">
-				<span class="inside"></span>
-			</span>
+			<div id="initial_screen" class="screen">
+				<div class="container">
+					<h1 id="top_logo">COUNT(ON)</h1>
+					<img src="assets/img/logo.png">
+					<h1 id="bot_logo">IT!</h1>
+				</div>
+			</div>
 			
-			<span id="acceptmsg">
-				<strong class="yes" onclick="message.confirm.callback(true);">YES!</strong>
-				<strong class="no"  onclick="message.confirm.callback(false);">NO!</strong>
-			</span>
-			
-			<span id="hint">
-			</span>
-			
-			<div id="box_config">
-				<a class="btn_close" id="btn_closeConfig"><i class="fa fa-close" aria-hidden="true"></i></a>
-				<h3>Adaptive Threshold</h3>
-				<span>
-					<label>Threshold:</label>
-					<input id="t_range" type="range" min=".01" max="1" step=".01" value=".1" oninput="adaptiveThreshold.changeParameters()" />
-				</span>
-				<span>
-					<label>Window size:</label> 
-					<input id="w_range" type="range" min=".01" max="1" step=".01" value="10" oninput="adaptiveThreshold.changeParameters()" />
+			<div id="main_screen" class="screen">
+				<nav id="main_menu">
+					<a id="btn_loadImg">
+						<i class="fa fa-image" aria-hidden="true"></i>
+						<input class="loadFile" id="openFile" type="file" id="files" name="files[]" />
+					</a>
+					<a id="btn_changeCamera" class="fa fa-camera" ></a>
+					<a id="btn_enableRealTime" class="fa fa-clock-o"></a>
+					<a id="btn_autoSetParameters" class="fa fa-crosshairs"></a>
+					<a id="btn_changeScreenSize" class="fa fa-expand"></a>
+					<a id="btn_showSettings" class="fa fa-gear" ></a>
+				</nav>
+				
+				<span id="error_fallback">Camera not found! :[</span>
+				<canvas id="canvas"></canvas>
+				<video id="video" autoplay></video>
+				
+				<input id="size_slider" type="range" min="1" max="10" step="1" value="10">
+				<input id="treshold_slider" type="range" min=".01" max=".5" step=".005" value=".01">
+				
+				<span id="btn_capture">
+					<span></span>
 				</span>
 				
-				<h3>Segment</h3>
-				<span>
-					<label>Min size:</label>
-					<input id="min_range" type="range" min="1" max="500" step="1" value="10" oninput="segment.changeParameters()" />
-				</span>
-				<span>
-					<label>Max size:</label> 
-					<input id="max_range" type="range" min="1" max="500" step="1" value="1000" oninput="segment.changeParameters()" />
+				<span id="checks_menu">
+					<a id="btn_wrong" class="fa fa-thumbs-down"></a>
+					<!--a id="btn_tooMany" class="fa fa-question"></a-->
+					<a id="box_quantity">95</a>
+					<a id="btn_right" class="fa fa-thumbs-up selected"></a>				
 				</span>
 			</div>
 			
-			<div id="top">
-				<ul id="main_menu">
-					<li>
-						<i class="fa fa-image" aria-hidden="true"></i>
-						<input class="loadFile" id="openFile" type="file" id="files" name="files[]" />
-					</li>
-					<li><i id="btn_changecamera" class="fa fa-camera" aria-hidden="true"></i></li>
-					<li><i id="btn_realtime" class="fa fa-clock-o" aria-hidden="true"></i></li>
-					<li><i id="btn_fullscreen" class="fa fa-expand" aria-hidden="true"></i></li>
-					<li><i id="btn_config" class="fa fa-gear" aria-hidden="true"></i></li>
-				</ul>
-			<div>
-		</div>
+			<div id="settings_screen" class="screen">
+			</div>
 			
+		</div>
+		<!--LIB INCLUDES-->
         <script src="assets/lib/adapter.js"></script>
         <script src="assets/lib/compatibility.js"></script>
-		
-        <script src="assets/js/list.js"></script>
-		
+        <script src="assets/lib/polygon.js"></script>
+        <script src="assets/lib/math.js"></script>
+        <script src="assets/lib/neuralnet.js"></script>
+        <script src="assets/lib/pointer.js"></script>
+        <script src="assets/lib/camera.js"></script>
         <script src="assets/js/utils.js"></script>
-        <script src="assets/js/imageData.js"></script>
-        <script src="assets/js/pointer.js"></script>
-        <script src="assets/js/filters.js"></script>
+		
+		<!--MODEL INCLUDES-->
+        <script src="assets/js/model/list.js"></script>
+        <script src="assets/js/model/imageData.js"></script>
+		
+		<!--FILTERS INCLUDES-->
+		<script src="assets/js/filters.js"></script>
+        <script src="assets/js/filters/cannyEdge.js"></script>
+        <script src="assets/js/filters/segmentation.js"></script>
+		
+        <!--CLASSES INCLUDES-->        
+		<script src="assets/js/animation.js"></script>
         <script src="assets/js/view.js"></script>
         <script src="assets/js/control.js"></script>
         <script>  
-		control.init();
+			window.onload = control.init();
         </script>
     </body>
 </html>
